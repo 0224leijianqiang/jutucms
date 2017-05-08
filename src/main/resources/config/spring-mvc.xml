@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+	
+	<!-- <bean id="exceptionHandler" class="com.jutubao.common.resolver.ExceptionHandler" />   -->
+	
+	
+	<!-- 静态资源访问 -->
+<!-- 	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/plugins/**" location="/plugins/" />
+	<mvc:resources mapping="/images/**" location="/images/" />
+	<mvc:resources mapping="/js/**" location="/js/"/>  -->
+
+
+	<bean id="requestMappingHandlerAdapter" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<value>text/html;charset=UTF-8</value>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<context:component-scan base-package="com.jutubao.*.controller" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
+
+	<mvc:default-servlet-handler />
+
+	<!-- 访问拦截  -->  
+ 	<!-- <mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**/**"/>
+			<bean class="com.jutubao.common.interceptor.SignHandlerInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors> -->
+
+	<!-- 配置JSP视图 -->
+	<bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="contentType" value="textml;charset=UTF-8" />
+		<property name="prefix" value="/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	<!-- 配置文件上传，如果没有使用文件上传可以不用配置，当然如果不配，那么配置文件中也不必引入上传组件包 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 默认编码 -->
+		<property name="defaultEncoding" value="utf-8" />
+		<!-- 文件大小最大值 -->
+		<property name="maxUploadSize" value="10485760000" />
+		<!-- 内存中的最大值 -->
+		<property name="maxInMemorySize" value="40960" />
+	</bean>
+	
+	<!-- ================ Shiro start ================ -->
+		<!-- <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+			<property name="realm" ref="ShiroRealm" />
+		</bean>
+		項目自定义的Realm
+	    <bean id="ShiroRealm" class="com.jutubao.interceptor.shiro.ShiroRealm" ></bean>
+		
+		Shiro Filter
+		<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+			<property name="securityManager" ref="securityManager" />
+			
+			<property name="loginUrl" value="/" />
+			
+			<property name="successUrl" value="/main/index" />
+			
+			<property name="unauthorizedUrl" value="/login_toLogin" />
+			
+			<property name="filterChainDefinitions">
+				<value>
+				/static/login/** 			= anon
+				/static/ace/** 			= anon
+				/static/index_files/** 			= anon
+				/static/js/myjs/** 			= authc
+				/static/js/date/** 			= anon
+				/static/js/** 				= anon
+				/static/css/** 				= anon
+				/uploadFiles/uploadImgs/** 	= anon
+	           	/static/html/** 			= anon
+	           	/code.do 					= anon
+	           	/login_login	 			= anon
+	           	/app**/** 					= anon
+	           	/weixin/** 					= anon
+	           	/wx/** 					= anon
+	           	/**							= authc
+				</value>
+			</property>
+		</bean> -->
+	<!-- ================ Shiro end ================ -->
+</beans>
